@@ -23,7 +23,7 @@ try:
 	reference_haplotypes = sys.argv[2]
 	missing_data = sys.argv[3]
 except:
-	print "Not enough arguments provided... Usage: RH_pipeline.py haplotypes reference_haplotypes %_missing_data"
+	print "Not enough arguments provided... Usage: RH_pipeline.py haplotypes reference_haplotypes %_of_missing_data"
 	sys.exit(1)
 
 
@@ -44,8 +44,9 @@ haplotypes_without_chcu=remove_chcuHaplotypes(chcu_dictionary,populationHaplotyp
 
 
 print "Filtering Haplotypes...\n"
-#if the symbol '-'(missing data) ocorres more than 50 times, the haplotype is discarted; 
-filtered_haplotypes=filter_haplotypes(haplotypes_without_chcu,missing_data) 
+#if the symbol '-'(missing data) ocorres more than x times, the haplotype is removed; 
+#if the % of missing data is higher than some value, the correspondent haplotype is removed;   
+filtered_haplotypes=filter_haplotypes(haplotypes_without_chcu,missing_data)
 
 
 print "Getting frequencies...\n"
