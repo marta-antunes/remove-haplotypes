@@ -15,6 +15,8 @@ from transpose_table_spaces import transpose_table_spaces
 from filter_snps import filter_snps
 from get_map import get_map
 
+import time
+
 
 
 #input files and parameters
@@ -102,11 +104,14 @@ print "removing names snps...\n"
 outputFile = open("snps_removenames_snps","w")
 remove_firstColumn = subprocess.Popen(['awk','BEGIN{FS=OFS=" "}{$1="";sub(" ","")}1',filtered_snps],stdout=outputFile)
 
+print "waiting for file to be written on disk..."
+time.sleep(2)
+
 
 #Transpose again to get final PED
 print "obtaining final ped...\n"
-print transpose_table_spaces("snps_removenames_snps","snps.ped")
-
+final = transpose_table_spaces( "snps_removenames_snps"  ,"snps.ped")
+print final
 
 
 

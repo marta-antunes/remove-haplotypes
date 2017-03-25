@@ -12,9 +12,13 @@ def count_ind(file_name):
 		return num_cols
 
 
-def number_of_haplotypes_to_remove(number_of_individuals, missing_data):
-	number_of_ind_to_remove=missing_data*number_of_individuals/100
-	return number_of_haplotypes_to_remove
+def number_of_haplotypes_to_remove(number_of_individuals,missing_data):
+	"""
+	"""
+	number_of_ind_to_remove=int(missing_data)*int(number_of_individuals)/100
+	print number_of_ind_to_remove
+	print type(number_of_ind_to_remove)
+	return number_of_ind_to_remove
 
 
 def filter_haplotypes(FileName,missingData):

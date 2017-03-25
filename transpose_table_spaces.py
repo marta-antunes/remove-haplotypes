@@ -11,9 +11,11 @@ def transpose_table_spaces(inFileName,outFileName):
 	lines=(line.strip("\n").split(" ") for line in inputfile)
 	for row in zip(*lines):
 		outputfile.write(" ".join(row)+"\n")
-	out=outFileName
 	outputfile.close()
+	out=outFileName
 	return out
+
+transpose_table_spaces("snps_removenames_snps","marta.ped")
 
 
 
