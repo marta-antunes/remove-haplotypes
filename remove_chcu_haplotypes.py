@@ -16,6 +16,7 @@ def fill_chcu_dict(chcu_file):
 		chcu_dict[locus]=[h.split(":")[0]]
 	      else:
 		chcu_dict[locus].append(h.split(":")[0])
+        print chcu_dict
 	return chcu_dict
 
 	#for k,v in chcu_dict.iteritems():  # list locus and haplotypes
@@ -26,8 +27,11 @@ def fill_chcu_dict(chcu_file):
 def remove_chcuHaplotypes(chcu_dict,population_file):
 	hap_file=open(population_file,"r") # haplotype.tsv file for Ad
 	OutFile=open("haplotypes_withoutChcu","w")
-
+	removals_report=open("removals_report","w")
+	countInputLines = 0 #receives the number of locus on input file
+	countOutputLines= 0 #receives the number of locus on output file
 	for line in hap_file:
+          countInputLines=countInputLines+1
 	  if line.startswith("Cat"):
 	    OutFile.write(line)
 	  else:
@@ -54,8 +58,12 @@ def remove_chcuHaplotypes(chcu_dict,population_file):
 		    new_haplotype.append("-") # none of the alleles present in chcu - not reliable
 		else:
 		  new_haplotype.append("-") # more than 2 haplotypes per individual - not reliable
-		
 	      OutFile.write(str(locus)+"\t"+str(cnt)+"\t"+"\t".join(str(i) for i in new_haplotype)+"\n")
+	      countOutputLines=countOutputLines+1
+            
+        removals_report.write("Number of locus Before remove chcu haplotypes:"+str(countInputLines)+"\n"+"Number of locus After remove chcu haplotypes:"+str(countOutputLines))
+        print "Number of locus Before chcu haplotypes removal:", countInputLines
+        print "Number of locus After chcu haplotypes removal:", countOutputLines
 	return "haplotypes_withoutChcu"
 	
 
