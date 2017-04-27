@@ -12,7 +12,7 @@ def convert_haplotypes_to_snps_ped_format(fileName):
       pass
     else:
       ind=line.split("\t")[0]
-      haplotypes=line.strip("\n").split("\t")[1:]
+      haplotypes=line.strip("\n").split("\t")[2:]
       snps=[]
       for hap in haplotypes:
         for h in hap:

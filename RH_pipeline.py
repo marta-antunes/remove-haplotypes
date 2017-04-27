@@ -21,11 +21,12 @@ import time
 
 #input files and parameters
 try:
-	populationHaplotypes_file = sys.argv[1]
-	reference_haplotypes = sys.argv[2]
-	missing_data = sys.argv[3]
+	haplotypes_without_chcu = sys.argv[1]
+	#populationHapstats_file = sys.argv[2]
+	#reference_hapstats = sys.argv[3]
+	missing_data = sys.argv[2]
 except:
-	print "Not enough arguments provided... Usage: RH_pipeline.py haplotypes reference_haplotypes %_of_missing_data"
+	print "Not enough arguments provided... Usage: RH_pipeline.py populationHaplotypes_file populationHapstats_file reference_hapstats %_of_missing_data "
 	sys.exit(1)
 
 
@@ -35,14 +36,16 @@ except:
 #departure_point: we have haplotypes for each individual that is the result of crossing population with homokariotipic chcu
 
 
+#construct a dictionary of REFERENCE population to be removed based on information in batch_1.hapstats.tsv
+##chcu_dictionary=fill_chcu_dict(reference_hapstats) #receives as input the file hapstats from REFERENCE population 
+##dicionary_of_scaffolds=create_dict_of_scaffolds(populationHapstats_file) #receives as input the file hapstats from POPULATION
+##population_file_scaff=vlookup_function(populationHaplotypes_file,0,1,2,dicionary_of_scaffolds)
+##time.sleep(2)
 
-#construct a dictionary of chcu based on information in batch_1.hapstats.tsv
-chcu_dictionary=fill_chcu_dict(reference_haplotypes)
 
-
-print "\n"+"Removing chcu haplotypes...\n"
+##print "\n"+"Removing chcu haplotypes...\n"
 #remove from Haplotypes Ad or Gro x chcu file (batch_1.haplotypes.tsv) what is in the dictionary of chcu
-haplotypes_without_chcu=remove_chcuHaplotypes(chcu_dictionary,populationHaplotypes_file)
+##haplotypes_without_chcu=remove_chcuHaplotypes(chcu_dictionary,population_file_scaff)
 
 
 print "Filtering Haplotypes...\n"
@@ -100,17 +103,25 @@ filtered_snps=filter_snps(transpossed_table_spaces)
 
 
 #Remove first column (names of snps) and separator
-print "removing names snps...\n"
+print "removing names ...\n"
 outputFile = open("snps_removenames_snps","w")
-remove_firstColumn = subprocess.Popen(['awk','BEGIN{FS=OFS=" "}{$1="";sub(" ","")}1',filtered_snps],stdout=outputFile)
+remove_first_and_second_Column = subprocess.Popen(['awk','BEGIN{FS=OFS=" "}{$1=""; $2="";sub(" ","")}1',filtered_snps],stdout=outputFile)
 
 print "waiting for file to be written on disk..."
-time.sleep(2)
+time.sleep(15)
+
+
+outputFile2 = open("snps_removenames_snps_without_space","w")
+remove_space = subprocess.call(['sed', 's/^ *//',"snps_removenames_snps"],stdout=outputFile2)
+#sed "s/^ *//" < ./snps_removenames_snps >./snps_removenames_snps2
+
+print "waiting for file to be written on disk..."
+time.sleep(15)
 
 
 #Transpose again to get final PED
 print "obtaining final ped...\n"
-final = transpose_table_spaces( "snps_removenames_snps"  ,"snps.ped")
+final = transpose_table_spaces("snps_removenames_snps_without_space","snps.ped")
 print final
 
 

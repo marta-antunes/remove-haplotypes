@@ -10,8 +10,9 @@ def get_map(fileName):
 	  if line.startswith("#"):
 	    pass
 	  else:
-	    locus=line.split(" ")[0] # locus ID in catalog (tag)   
-	    outfile.write("1"+" "+locus+" "+"0"+" "+"0"+"\n")
+	    locus=line.split(" ")[0] # locus ID in catalog (tag)
+	    scaffold=line.split(" ")[1]
+	    outfile.write(scaffold+" "+locus+" "+"0"+" "+"0"+"\n")
 	return "snps_doubled.map"
 
 	  

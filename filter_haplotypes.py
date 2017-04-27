@@ -8,8 +8,9 @@ def count_ind(file_name):
 	with open(file_name) as f:
     		reader = csv.reader(f, delimiter='	', skipinitialspace=True)
     		first_row = next(reader)
-    		num_cols = len(first_row)-2 #-2 is the removal of first and second (Cat and count) columns
+    		num_cols = len(first_row)-3 #-3 is the removal of first, second and third (Cat,count and scaffold) columns
 		return num_cols
+
 
 
 def number_of_haplotypes_to_remove(number_of_individuals,missing_data):
@@ -19,6 +20,7 @@ def number_of_haplotypes_to_remove(number_of_individuals,missing_data):
 	print number_of_ind_to_remove
 	print type(number_of_ind_to_remove)
 	return number_of_ind_to_remove
+
 
 
 def filter_haplotypes(FileName,missingData):
@@ -33,7 +35,7 @@ def filter_haplotypes(FileName,missingData):
       outputfile.write(line)
     else:
       locus=line[0]
-      haplotypes=line[2:]
+      haplotypes=line[3:] #because haplotypes are in column 3,4,5...
       if haplotypes.count("-") > int(removals):
         locus_removed+=1
         pass

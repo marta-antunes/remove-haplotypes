@@ -13,11 +13,12 @@ def convert_snpslist_map_format(fileName):
 	    pass
 	  else:
 	    locus=line.split("\t")[0] # locus ID in catalog (tag)
-	    haplotypes=line.strip("\n").split("\t")[2:]
+	    scaffold=line.split("\t")[2] # scaffold
+	    haplotypes=line.strip("\n").split("\t")[3:]#haplotypes start in column 3
 	    nbases=len(max(haplotypes,key=len))# get the maximum number of bases of the locus
 	   
 	    for i in range(nbases):
-	      outputfile.write("1"+" "+locus+"-"+str(i)+" "+"0"+" "+"0"+"\n")
+	      outputfile.write(str(scaffold)+" "+locus+"-"+str(i)+" "+"0"+" "+"0"+"\n")
 	return "snps_provis.map"
 
 

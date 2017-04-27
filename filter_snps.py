@@ -12,7 +12,7 @@ def filter_snps(fileName):
        outputfile.write(line.strip()+"\n")
     else:
       alleles=[]
-      snps=line.strip().split(" ")[1:]
+      snps=line.strip().split(" ")[2:]
       for s in snps:
         if s in ("A","T","C","G"):
           alleles.append(s)
@@ -28,4 +28,3 @@ def filter_snps(fileName):
          outputfile.write(line.strip()+"\n")
   return "snps_withnames_transposed_filteredsnps"
 
-  
