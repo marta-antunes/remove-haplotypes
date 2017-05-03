@@ -23,7 +23,7 @@ def add_snpsnames(mapFileName,pedFileName):
 	#print "AQUI",scaffolds
 	mapp_file.close()
 	
-	outputfile.write("#FAMID"+" "+"#IND"+" "+"#PATID"+" "+"#MATID"+" "+"#SEX"+" "+"#PHENO"+" "+" ".join((str(i)+" "+str(i)) for i in snps)+"\n"+"0"+" "+"0"+" "+"0"+" "+"0"+" "+"0"+" "+"0"+" "+" ".join((str(j)+" "+str(j)) for j in scaffolds))  #PED format (plink) 
+	outputfile.write("#FAMID"+" "+"#IND"+" "+"#PATID"+" "+"#MATID"+" "+"#SEX"+" "+"#PHENO"+" "+" ".join((str(i)+" "+str(i)) for i in snps)+"\n"+"0"+" "+"0"+" "+"0"+" "+"0"+" "+"0"+" "+"0"+" "+" ".join((str(j)+" "+str(j)) for j in scaffolds)+"\n")  #PED format (plink) 
 	  
 	ped_file=open(pedFileName,"r") # PED snp file 
 
