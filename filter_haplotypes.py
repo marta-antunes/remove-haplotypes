@@ -17,8 +17,6 @@ def number_of_haplotypes_to_remove(number_of_individuals,missing_data):
 	"""
 	"""
 	number_of_ind_to_remove=int(missing_data)*int(number_of_individuals)/100
-	print number_of_ind_to_remove
-	print type(number_of_ind_to_remove)
 	return number_of_ind_to_remove
 
 
@@ -35,14 +33,14 @@ def filter_haplotypes(FileName,missingData):
       outputfile.write(line)
     else:
       locus=line[0]
-      haplotypes=line[3:] #because haplotypes are in column 3,4,5...
+      haplotypes=line[4:] #because haplotypes are in column 4,5,6...
       if haplotypes.count("-") > int(removals):
         locus_removed+=1
         pass
       else:
         locus_kept+=1
         outputfile.write(line)
-  print "removals:",removals
+  print "number of individuals removed:",removals+"\n"
   print "locus removed:"+str(locus_removed)
   print "locus kept:"+str(locus_kept)+"\n"
   return "haplotypes_withoutChcu_filtered"

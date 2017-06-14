@@ -18,4 +18,3 @@ def transpose_table_spaces(inFileName,outFileName):
 
 
 
-

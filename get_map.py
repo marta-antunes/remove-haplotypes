@@ -12,7 +12,8 @@ def get_map(fileName):
 	  else:
 	    locus=line.split(" ")[0] # locus ID in catalog (tag)
 	    scaffold=line.split(" ")[1]
-	    outfile.write(scaffold+" "+locus+" "+"0"+" "+"0"+"\n")
+	    BP=line.split(" ")[2] #because bp information is on 3rd column, index 2
+	    outfile.write(scaffold+" "+locus+" "+"0"+" "+BP+"\n")
 	return "snps_doubled.map"
 
 	  

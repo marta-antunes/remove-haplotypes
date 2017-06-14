@@ -2,6 +2,7 @@
 import csv
 import sys
 import time
+import json
 
 
 def fill_chcu_dict(chcu_file):
@@ -19,22 +20,19 @@ def fill_chcu_dict(chcu_file):
 		chcu_dict[locus]=[h.split(":")[0]]
 	      else:
 		chcu_dict[locus].append(h.split(":")[0])
-        #print chcu_dict
 	return chcu_dict
 
 	hap_file_chcu.close()
 
 
-	
 def create_dict_of_scaffolds(hapstats_file):
   with open(hapstats_file) as csv_hapstats_file:
     spamreader = csv.reader(csv_hapstats_file,delimiter='\t')
     dict_of_scaffolds={}
-    for _ in xrange(6):#because the first 6 lines are the header
+    for _ in xrange(7):#because the first 7 lines are the header
         next(spamreader)
     for line in spamreader:
-      dict_of_scaffolds[line[1]]=line[2]
-  #print dict_of_scaffolds
+      dict_of_scaffolds[line[1]]=line[2:4]
   return dict_of_scaffolds
 
 
@@ -45,19 +43,19 @@ def vlookup_function(population_file,colOfF1,colOfF2,colToAdd,dictionary_of_scaf
 	  spamreader1 = csv.reader(csvfile1, delimiter='\t')
 	  for F1row in spamreader1:
 	    if F1row[0]=="Catalog ID":
-	      l=["Scaffold"]
+	      l=["Scaffold","BP"]
 	      writer.writerow(F1row[0:2]+l+F1row[2:])
 	    elif F1row[int(colOfF1)] in dictionary_of_scaff.keys(): #if value is in dict
-	      lst=[]
-	      lst.append(dictionary_of_scaff[F1row[0]])
-	      #print "aquii", lst
+	      lst=dictionary_of_scaff[F1row[0]]
 	      line=F1row[0:2]+lst+F1row[2:]
 	      writer.writerow(line)
+            else:
+                pass
   return "outfile.tsv"
 
 
 
-def remove_chcuHaplotypes(chcu_dict,population_file):
+def remove_chcuHaplotypes(chcu_dict,population_file,dictionary_BP):
 	hap_file=open(population_file,"r") # haplotype.tsv file for Ad
 	OutFile=open("haplotypes_withoutChcu","w")
 	removals_report=open("removals_report","w")
@@ -72,7 +70,9 @@ def remove_chcuHaplotypes(chcu_dict,population_file):
 	    if locus in chcu_dict:
 	      cnt=line.split("\t")[1] # count of number of samples with this locus
 	      scaffold=line.split("\t")[2]
-	      haplotypes=line.strip().split("\t")[3:] # each column has the haplotypes for each individual but the first two have locus and count information
+	      BP=str(dictionary_BP[locus])
+	      BP=BP.replace(" ", "").strip("[]")
+	      haplotypes=line.strip().split("\t")[4:] # each column has the haplotypes for each individual but the first two have locus and count information
 
 	      new_haplotype=[] #after removing chcu haplotype
 	    
@@ -92,7 +92,7 @@ def remove_chcuHaplotypes(chcu_dict,population_file):
 		    new_haplotype.append("-") # none of the alleles present in chcu - not reliable
 		else:
 		  new_haplotype.append("-") # more than 2 haplotypes per individual - not reliable
-	      OutFile.write(str(locus)+"\t"+str(cnt)+"\t"+str(scaffold)+"\t"+"\t".join(str(i) for i in new_haplotype)+"\n")
+	      OutFile.write(str(locus)+"\t"+str(cnt)+"\t"+str(scaffold)+"\t"+str(BP)+"\t"+"\t".join(str(i) for i in new_haplotype)+"\n")
 	      countOutputLines=countOutputLines+1
             
         removals_report.write("Number of locus Before remove chcu haplotypes:"+str(countInputLines)+"\n"+"Number of locus After remove chcu haplotypes:"+str(countOutputLines))

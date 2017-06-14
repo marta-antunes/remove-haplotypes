@@ -12,7 +12,7 @@ def filter_snps(fileName):
        outputfile.write(line.strip()+"\n")
     else:
       alleles=[]
-      snps=line.strip().split(" ")[2:]
+      snps=line.strip().split(" ")[3:] #because index 0 is the name, 1 is scaffold and 2 is bp
       for s in snps:
         if s in ("A","T","C","G"):
           alleles.append(s)

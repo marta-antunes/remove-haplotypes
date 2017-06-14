@@ -16,15 +16,16 @@ from filter_snps import filter_snps
 from get_map import get_map
 
 import time
+import json
 
 
 
 #input files and parameters
 try:
-	haplotypes_without_chcu = sys.argv[1]
-	#populationHapstats_file = sys.argv[2]
-	#reference_hapstats = sys.argv[3]
-	missing_data = sys.argv[2]
+	populationHaplotypes_file = sys.argv[1]
+	populationHapstats_file = sys.argv[2]
+	reference_hapstats = sys.argv[3]
+	missing_data = sys.argv[4]
 except:
 	print "Not enough arguments provided... Usage: RH_pipeline.py populationHaplotypes_file populationHapstats_file reference_hapstats %_of_missing_data "
 	sys.exit(1)
@@ -37,15 +38,22 @@ except:
 
 
 #construct a dictionary of REFERENCE population to be removed based on information in batch_1.hapstats.tsv
-##chcu_dictionary=fill_chcu_dict(reference_hapstats) #receives as input the file hapstats from REFERENCE population 
-##dicionary_of_scaffolds=create_dict_of_scaffolds(populationHapstats_file) #receives as input the file hapstats from POPULATION
-##population_file_scaff=vlookup_function(populationHaplotypes_file,0,1,2,dicionary_of_scaffolds)
-##time.sleep(2)
+chcu_dictionary=fill_chcu_dict(reference_hapstats) #receives as input the file hapstats from REFERENCE population 
+print "dict of chcu constructed"
+
+dicionary_of_scaffolds=create_dict_of_scaffolds(populationHapstats_file) #receives as input the file hapstats from POPULATION
+print "dict of scaffolds constructed"
+#print dicionary_of_scaffolds
+
+population_file_scaff=vlookup_function(populationHaplotypes_file,0,1,2,dicionary_of_scaffolds)
+time.sleep(2)
 
 
-##print "\n"+"Removing chcu haplotypes...\n"
+print "\n"+"Removing chcu haplotypes...\n"
 #remove from Haplotypes Ad or Gro x chcu file (batch_1.haplotypes.tsv) what is in the dictionary of chcu
-##haplotypes_without_chcu=remove_chcuHaplotypes(chcu_dictionary,population_file_scaff)
+with open('dict_grande.json', 'r') as fp:
+    dictionary_BP=json.load(fp)
+    haplotypes_without_chcu=remove_chcuHaplotypes(chcu_dictionary,population_file_scaff,dictionary_BP)
 
 
 print "Filtering Haplotypes...\n"
@@ -102,18 +110,10 @@ print "filtering snps...\n"
 filtered_snps=filter_snps(transpossed_table_spaces)
 
 
-#Remove first column (names of snps) and separator
+#Remove first 3 columns (names of snps, scaffold and position) and separator
 print "removing names ...\n"
 outputFile = open("snps_removenames_snps","w")
-remove_first_and_second_Column = subprocess.Popen(['awk','BEGIN{FS=OFS=" "}{$1=""; $2="";sub(" ","")}1',filtered_snps],stdout=outputFile)
-
-print "waiting for file to be written on disk..."
-time.sleep(15)
-
-
-outputFile2 = open("snps_removenames_snps_without_space","w")
-remove_space = subprocess.call(['sed', 's/^ *//',"snps_removenames_snps"],stdout=outputFile2)
-#sed "s/^ *//" < ./snps_removenames_snps >./snps_removenames_snps2
+remove_first_and_second_Column = subprocess.Popen(['awk','BEGIN{FS=OFS=" "}{$1=""; $2="";$3="";sub("   ","")}1',filtered_snps],stdout=outputFile)
 
 print "waiting for file to be written on disk..."
 time.sleep(15)
@@ -121,7 +121,7 @@ time.sleep(15)
 
 #Transpose again to get final PED
 print "obtaining final ped...\n"
-final = transpose_table_spaces("snps_removenames_snps_without_space","snps.ped")
+final = transpose_table_spaces("snps_removenames_snps","snps.ped")
 print final
 
 
@@ -138,9 +138,3 @@ print "removing duplicated lines...\n"
 outFile = open('snps.map','w')
 haplotypes_map_format_final = subprocess.Popen(['awk','NR % 2==0',doubled],stdout=outFile)
 outFile.close()
-
-
-
-
-
-

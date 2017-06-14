@@ -23,7 +23,16 @@ def add_snpsnames(mapFileName,pedFileName):
 	#print "AQUI",scaffolds
 	mapp_file.close()
 	
-	outputfile.write("#FAMID"+" "+"#IND"+" "+"#PATID"+" "+"#MATID"+" "+"#SEX"+" "+"#PHENO"+" "+" ".join((str(i)+" "+str(i)) for i in snps)+"\n"+"0"+" "+"0"+" "+"0"+" "+"0"+" "+"0"+" "+"0"+" "+" ".join((str(j)+" "+str(j)) for j in scaffolds)+"\n")  #PED format (plink) 
+	BP=[]
+	mappp_file=open(mapFileName,"r")
+	for li in mappp_file: #iterates over map file
+            new_line=li.strip('\n')#.because is the last column and the last column has always associated with it the change line character "\n". we have to remove it
+            BP.append(new_line.split(" ")[3]) #column 4 index 3 contain bp info
+	  #print "AQUII",scaffolds
+	#print "AQUI",BP
+	mappp_file.close()
+	
+	outputfile.write("#FAMID"+" "+"#IND"+" "+"#PATID"+" "+"#MATID"+" "+"#SEX"+" "+"#PHENO"+" "+" ".join((str(i)+" "+str(i)) for i in snps)+"\n"+"0"+" "+"0"+" "+"0"+" "+"0"+" "+"0"+" "+"0"+" "+" ".join((str(j)+" "+str(j)) for j in scaffolds)+"\n"+"0"+" "+"0"+" "+"0"+" "+"0"+" "+"0"+" "+"0"+" "+" ".join((str(k)+" "+str(k)) for k in BP)+"\n")  #PED format (plink) 
 	  
 	ped_file=open(pedFileName,"r") # PED snp file 
 
@@ -31,6 +40,6 @@ def add_snpsnames(mapFileName,pedFileName):
 	  outputfile.write(line.strip()+"\n")
 	return "snps_withnames.ped"
 
-
+#add_snpsnames("snps_provis.map","snps_provis.ped")
   
     

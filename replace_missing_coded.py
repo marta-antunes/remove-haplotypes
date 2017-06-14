@@ -11,11 +11,11 @@ def replace_missing_coded(fileName):
   for line in hap_file_samples:
     if line.startswith("Cat"):
       #cat=line.split("\t")[0] # locus title
-      ind=line.split("\t")[3:] # individuals names
+      ind=line.split("\t")[4:] # individuals names
       outputfile.write("CatalogID"+"\t"+"\t".join(str(i) for i in ind))
     else:
       locus=line.split("\t")[0] # locus ID in catalog (tag)
-      haplotypes=line.strip("\n").split("\t")[3:]
+      haplotypes=line.strip("\n").split("\t")[4:]
       nbases=len(max(haplotypes,key=len))# get the maximum number of bases of the locus
       #print nbases
       hap=[]
@@ -27,5 +27,4 @@ def replace_missing_coded(fileName):
 
       outputfile.write(locus+"\t"+"\t".join(str(i) for i in hap)+"\n")   #without loci names
   return "haplotype_withoutChcu_filtered_missing_coded"
-
 

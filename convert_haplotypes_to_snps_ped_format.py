@@ -10,15 +10,16 @@ def convert_haplotypes_to_snps_ped_format(fileName):
   for line in inputfile:
     if line.startswith("Cat"):
       pass
+    elif line.startswith("BP"):
+      pass
     else:
       ind=line.split("\t")[0]
-      haplotypes=line.strip("\n").split("\t")[2:]
+      haplotypes=line.strip("\n").split("\t")[1:]
       snps=[]
       for hap in haplotypes:
         for h in hap:
           snps.append(h)
-        
-      outputfile.write( "1"+" "+ind+" "+"0"+" "+"0"+" "+"0"+" "+"0"+" "+" ".join((str(i)+" "+str(i)) for i in snps)+"\n")  #PED format (plink) 
+      outputfile.write( "1"+" "+ind+" "+"0"+" "+"0"+" "+"0"+" "+"0"+" "+" ".join((str(i)+" "+str(i)) for i in snps)+"\n")
   return "snps_provis.ped"
       
 
